@@ -1,0 +1,65 @@
+from utils.connect import get_data, connect_to_snowflake, disconnect_from_snowflake
+import streamlit as st
+import plotly.graph_objects as go
+import pandas as pd
+from pandas.api.types import (
+    is_categorical_dtype,
+    is_datetime64_any_dtype,
+    is_numeric_dtype,
+    is_object_dtype,
+)
+
+
+def main():
+    st.set_page_config(layout="wide", page_title="CONSENT HEALTHCHECK BOARD", page_icon=":bar_chart:")
+    st.title("Snowplow Consent Insights")
+    st.header("this is the header")
+    st.subheader("Summary")
+    st.sidebar.write("side")
+
+    # getting data from Snowflake
+    data_load_state = st.text("Loading data...")
+    cs, cnx = connect_to_snowflake()
+    users = get_data(cs, "queries/users.sql")
+    log = get_data(cs, "queries/log.sql")
+    latest_version = get_data(cs, "queries/latest_version.sql")
+    disconnect_from_snowflake(cs, cnx)
+    data_load_state.text("")
+
+    # creating dataframes and set some of them as sesssion states to use them elsewhere
+    df_users = pd.DataFrame(users, columns=["DOMAIN_USERID", "CMP_EVENTS", "LAST_CONSENT_TSTAMP", "LAST_CONSENT_SCOPES", "LAST_CONSENT_VERSION", "LAST_CONSENT_URL", "LAST_CONSENT_DOMAINS_APPLIED", "latest_CONSENT_VERSION", "latest_CONSENT_SCOPES", "latest_CONSENT_URL"])
+    for col in df_users.columns:
+        if is_object_dtype(df_users[col]):
+            try:
+                df_users[col] = pd.to_datetime(df_users[col])
+            except Exception:
+                pass
+        if is_datetime64_any_dtype(df_users[col]):
+            df_users[col] = df_users[col].dt.tz_localize(None)
+    df_users.style.set_properties(**{'background-color': 'white'})
+    st.session_state['df_users'] = df_users
+
+    df_log = pd.DataFrame(log, columns=["EVENT_ID", "DOMAIN_USERID", "COLLECTOR_TSTAMP", "EVENT", "CONSENT_ACTION", "BASIS_FOR_PROCESSING", "CONSENT_URL", "CONSENT_VERSION", "CONSENT_SCOPES", "DOMAINS_APPLIED", "ELAPSED_TIME"])
+    for col in df_log.columns:
+        if is_object_dtype(df_log[col]):
+            try:
+                df_log[col] = pd.to_datetime(df_log[col])
+            except Exception:
+                pass
+        if is_datetime64_any_dtype(df_log[col]):
+            df_log[col] = df_log[col].dt.tz_localize(None)
+    df_log.style.set_properties(**{'background-color': 'white'})
+    st.session_state['df_log'] = df_log
+
+    df_latest_version = pd.DataFrame(latest_version, columns=["latest_consent_version","latest_consent_scopes","latest_consent_url","latest_domains_applied", ])
+    st.dataframe(df_latest_version)
+    # creating the layout
+    #col1, col2, col3 = st.columns([1, 3, 2])
+
+    # filling out the layout
+    # - this should be the main stats of the current health
+    # (total visitors, pending users, per scope status how many approved
+    # or declined out of tose who have given consent)
+
+if __name__ == "__main__":
+    main()

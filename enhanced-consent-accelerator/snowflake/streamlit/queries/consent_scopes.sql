@@ -1,0 +1,2 @@
+select scope, total_consent
+from snowplow_web_consent_scope_status
