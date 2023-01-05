@@ -34,7 +34,7 @@ SELECT
     SUM(cart_product) as cart_product,
     SUM(transact_product) as transact_product,
     SUM(unique_transactions) as unique_transactions,
-    SUM(product_revenue) as product_revenue
+    cast(SUM(product_revenue) AS STRING FORMAT '999,999.99')  as product_revenue
 FROM session_prod_lists a
     LEFT JOIN session_interactions b
         ON a.domain_sessionid = b.domain_sessionid and a.product_id = b.product_id

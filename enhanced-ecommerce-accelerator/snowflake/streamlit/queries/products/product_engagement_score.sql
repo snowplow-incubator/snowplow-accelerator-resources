@@ -11,7 +11,7 @@ with product_stats AS (
 )
 SELECT
     product_id,
-    100.0 * (number_cart_interactions + number_product_purchases) / number_product_views as product_engagment_score
+    100.0 * (number_cart_interactions + number_product_purchases) / nullif(number_product_views, 0) as product_engagment_score
 FROM
     product_stats
 ORDER BY 2

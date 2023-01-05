@@ -1,6 +1,6 @@
 -- guest checkout rate
 select
-    COUNT(DISTINCT CASE WHEN ecommerce_user_is_guest THEN event_id END) /COUNT(DISTINCT event_id) * 1.0 as guest_checkout_rate
+    coalesce(COUNT(DISTINCT CASE WHEN ecommerce_user_is_guest THEN event_id END) /nullif(COUNT(DISTINCT event_id),0) * 1.0,0) as guest_checkout_rate
 from
     `$1`.`$2`.snowplow_ecommerce_checkout_interactions
 where
