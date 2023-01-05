@@ -22,11 +22,12 @@ def main():
     brand_revenues = get_data("queries/products/brand_revenues.sql")
     # cart_removal_rate = get_data('queries/products/cart_removal_rate.sql')
     # out_of_stock_entrances = get_data('queries/products/out_of_stock_entrances.sql')
-    out_of_stock_views = get_data('queries/products/out_of_stock_views.sql')
-    product_engagement_score = get_data('queries/products/product_engagement_score.sql')
+    # out_of_stock_views = get_data('queries/products/out_of_stock_views.sql')
+    product_views = get_data('queries/products/product_views.sql')
+    # product_engagement_score = get_data('queries/products/product_engagement_score.sql')
     revenue_categories = get_data('queries/products/revenue_categories.sql')
     # variant_popularity_carts = get_data('queries/products/variant_popularity_carts.sql')
-    variant_popularity_transactions = get_data('queries/products/variant_popularity_transactions.sql')
+    # variant_popularity_transactions = get_data('queries/products/variant_popularity_transactions.sql')
     # view_to_cart_rate = get_data('queries/products/view_to_cart_rate.sql')
     # view_to_transaction_rate = get_data('queries/products/view_to_transaction_rate.sql')
     views_and_transactions = get_data('queries/products/views_and_transactions.sql')
@@ -48,7 +49,7 @@ def main():
 
     data_load_state.text("")
 
-    st.subheader("Summary")
+    st.header("Order Summary")
 
     col1, col2, col3, col4, col5 = st.columns([1, 1, 1, 1, 1])
 
@@ -86,11 +87,12 @@ def main():
         )
 
 
-    st.subheader("Products")
+    st.header("Product Summary")
 
     col1, col2 = st.columns([1, 2])
     with col1:
-        fig = px.scatter(views_and_transactions, x = 'Views', y= 'Transactions', hover_data = ['Views', 'Transactions', 'product_id'])
+        views_and_transactions["sizes"] = 2
+        fig = px.scatter(views_and_transactions, x = 'Views', y= 'Transactions', hover_data = ['Views', 'Transactions', 'product_id'], size='sizes')
 
         fig.update_layout(
             height=300,
@@ -102,20 +104,47 @@ def main():
         st.plotly_chart(fig, use_container_width=True)
 
     with col2:
-        fig = px.line(out_of_stock_views.rename(columns = {'out_of_stock_views': 'Number of Views'}), x = 'Date', y = 'Number of Views')
+        fig = px.line(product_views.rename(columns = {'product_views': 'Number of Views'}), x = 'Date', y = 'Number of Views')
         fig.update_layout(
             height=300,
             width=700,
             margin={"l": 20, "r": 20, "t": 25, "b": 0},
             legend=dict(yanchor="top", y=0.99, xanchor="right", x=0.99),
-            title_text="Out of stock product views"
+            title_text="Daily Product views"
         )
         st.plotly_chart(fig, use_container_width=True)
 
     st.caption('Product List Performance')
     st.dataframe(product_list_performance.rename(columns = {'product_list_name': 'Product List', 'list_views': 'List Views', 'product_viewed': 'Product List Clicks', 'cart_product': 'Product Adds to Basket', 'transact_product': 'Product Checkouts', 'unique_transactions': 'Unique Purchases', 'product_revenue': 'Product Revenue', 'CTR': ' Product List CTR'}), use_container_width = True)
 
-    st.subheader("Checkouts")
+    st.header("Checkout Overview")
+
+    col1, col2 = st.columns([4, 1])
+    with col2:
+        st.metric(
+                label = 'Checkout Abandonment Rate',
+                value = str(round(checkout_abandonment_rate.iat[0,0]* 100, 1)) + '%'
+                )
+        st.write('\n')
+        st.write('\n')
+        st.metric(
+                label = 'Guest Checkout Rate',
+                value = str(round(guest_checkout_rate.iat[0,0]* 100, 1)) + '%'
+                )
+
+    with col1:
+        fig = px.pie(payment_methods, values = 'number_transactions', names = 'transaction_payment_method')
+        fig.update_layout(
+            height=300,
+            width=700,
+            xaxis=dict(tickformat=".2%"),
+            yaxis=dict(tickformat=".2%"),
+            margin={"l": 20, "r": 20, "t": 25, "b": 0},
+            legend=dict(yanchor="top", y=0.99, xanchor="right", x=0.99),
+            title_text="Payment Methods"
+        )
+        st.plotly_chart(fig, use_container_width=True)
+
 
     checkout_funnel = checkout_funnel.rename(columns = {'session_entered_at_step' : 'Session Entered at Step'})
     fig = px.funnel(checkout_funnel, y='Volume', x='Step', color='Session Entered at Step')
@@ -144,38 +173,13 @@ def main():
                 value =  str(lost_num)+ ' (' + str(lost_perc) +'%)'
                 )
 
-    st.write('\n')
-    st.write('\n')
-
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col1:
-        st.metric(
-                label = 'Checkout Abandonment Rate',
-                value = str(round(checkout_abandonment_rate.iat[0,0]* 100, 1)) + '%'
-                )
-
-    with col2:
-        fig = px.pie(payment_methods, values = 'number_transactions', names = 'transaction_payment_method')
-        fig.update_layout(
-            height=300,
-            width=700,
-            xaxis=dict(tickformat=".2%"),
-            yaxis=dict(tickformat=".2%"),
-            margin={"l": 20, "r": 20, "t": 25, "b": 0},
-            legend=dict(yanchor="top", y=0.99, xanchor="right", x=0.99),
-            title_text="Payment Methods"
-        )
-        st.plotly_chart(fig, use_container_width=True)
-
-    with col3:
-        st.metric(
-                label = 'Guest Checkout Rate',
-                value = str(round(guest_checkout_rate.iat[0,0]* 100, 1)) + '%'
-                )
 
 
 
-    st.subheader("Carts")
+
+
+
+    st.header("Cart Insight")
 
     col1, col2 = st.columns([1, 2])
 
@@ -200,7 +204,7 @@ def main():
         st.plotly_chart(fig, use_container_width=True)
 
 
-    st.subheader("Sessions")
+    st.subheader("Session Analysis")
 
 
     sessions_funnel = sessions_funnel.rename(columns = {'session_entered_at_step' : 'Session Entered at Step'})

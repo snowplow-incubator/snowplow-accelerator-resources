@@ -8,6 +8,6 @@ with session_checkouts AS (
 )
 
 select
-    1 - (number_checkouts_succeeded / number_checkouts_attempted * 1.0) as checkout_abandonment_rate
+    1 - (number_checkouts_succeeded / nullif(number_checkouts_attempted,0) * 1.0) as checkout_abandonment_rate
 from
     session_checkouts
