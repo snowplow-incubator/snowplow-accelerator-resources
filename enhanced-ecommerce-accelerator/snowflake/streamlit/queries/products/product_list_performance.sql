@@ -6,7 +6,7 @@ WITH session_prod_lists as (
         product_id,
         COUNT(distinct domain_sessionid) as list_views
     FROM
-        dbt_ryan_derived.snowplow_ecommerce_product_interactions
+        `$1`.`$2`.snowplow_ecommerce_product_interactions
     WHERE
         product_view_type = 'list_view'
     GROUP BY 1,2,3
@@ -22,7 +22,7 @@ session_interactions as (
         COUNT(distinct transaction_id) as unique_transactions,
         SUM(case when is_product_transaction then product_price * coalesce(product_quantity, 1) else 0 end) as product_revenue
     FROM
-        dbt_ryan_derived.snowplow_ecommerce_product_interactions
+        `$1`.`$2`.snowplow_ecommerce_product_interactions
     GROUP BY 1, 2
 )
 
