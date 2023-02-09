@@ -5,5 +5,5 @@ select
     COUNT(DISTINCT event_id) as number_total_views
 
 from
-    `$1`.`$2`.snowplow_ecommerce_checkout_interactions
+    "$1"."$2".snowplow_ecommerce_checkout_interactions
 group by 1

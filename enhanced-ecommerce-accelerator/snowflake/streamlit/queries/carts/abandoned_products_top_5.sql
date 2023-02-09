@@ -7,7 +7,7 @@ WITH session_products AS (
         SUM(CASE WHEN is_remove_from_cart THEN COALESCE(product_quantity, 1) ELSE 0 END ) +
             SUM(CASE WHEN is_product_transaction THEN COALESCE(product_quantity, 1) ELSE 0 END ) AS total_removed
     FROM
-        `$1`.`$2`.snowplow_ecommerce_product_interactions
+        "$1"."$2".snowplow_ecommerce_product_interactions
     GROUP BY
         domain_sessionid,
         product_id

@@ -6,7 +6,7 @@ WITH session_prod_lists as (
         product_id,
         COUNT(distinct domain_sessionid) as list_views
     FROM
-        `$1`.`$2`.snowplow_ecommerce_product_interactions
+        "$1"."$2".snowplow_ecommerce_product_interactions
     WHERE
         product_view_type = 'list_view'
     GROUP BY 1,2,3
@@ -22,7 +22,7 @@ session_interactions as (
         COUNT(distinct transaction_id) as unique_transactions,
         SUM(case when is_product_transaction then product_price * coalesce(product_quantity, 1) else 0 end) as product_revenue
     FROM
-        `$1`.`$2`.snowplow_ecommerce_product_interactions
+        "$1"."$2".snowplow_ecommerce_product_interactions
     GROUP BY 1, 2
 )
 
@@ -34,7 +34,7 @@ SELECT
     SUM(cart_product) as cart_product,
     SUM(transact_product) as transact_product,
     SUM(unique_transactions) as unique_transactions,
-    cast(SUM(product_revenue) AS STRING FORMAT '999,999.99')  as product_revenue
+    TO_VARCHAR(SUM(product_revenue), '999,999.00')  as product_revenue
 FROM session_prod_lists a
     LEFT JOIN session_interactions b
         ON a.domain_sessionid = b.domain_sessionid and a.product_id = b.product_id
