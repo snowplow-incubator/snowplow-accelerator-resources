@@ -1,23 +1,23 @@
 WITH
     step_numbers AS (
     SELECT
-        'session' AS step,
+        'SESSION' AS step,
         0 AS step_number
     UNION ALL
     SELECT
-        'viewed_product' AS step,
+        'VIEWED_PRODUCT' AS step,
         1 AS step_number
     UNION ALL
     SELECT
-        'added_to_cart' AS step,
+        'ADDED_TO_CART' AS step,
         2 AS step_number
     UNION ALL
     SELECT
-        'checked_out' AS step,
+        'CHECKED_OUT' AS step,
         3 AS step_number
     UNION ALL
     SELECT
-        'transacted' AS step,
+        'TRANSACTED' AS step,
         4 AS step_number
     ),
 
@@ -50,9 +50,9 @@ WITH
     END
         AS transacted
     FROM
-        `$1`.`$2`.snowplow_ecommerce_sessions
+        "$1"."$2".snowplow_ecommerce_sessions
     WHERE
-        DATE(start_tstamp) >= "2022-10-01"
+        DATE(start_tstamp) >= '2022-10-01'
     ),
 
     unpivoted AS(

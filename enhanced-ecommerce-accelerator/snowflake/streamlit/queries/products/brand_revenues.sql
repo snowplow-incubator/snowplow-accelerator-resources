@@ -3,7 +3,7 @@ select
     product_brand,
     SUM(product_price) as total_revenue
 from
-    `$1`.`$2`.snowplow_ecommerce_product_interactions
+    "$1"."$2".snowplow_ecommerce_product_interactions
 where
     is_product_transaction
 GROUP BY 1

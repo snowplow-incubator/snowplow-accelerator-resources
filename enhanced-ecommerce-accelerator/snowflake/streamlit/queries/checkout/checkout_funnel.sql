@@ -4,9 +4,9 @@ WITH
         DISTINCT ecommerce_page_type,
         checkout_step_number
     FROM
-        `$1`.`$2`.snowplow_ecommerce_checkout_interactions a
+        "$1"."$2".snowplow_ecommerce_checkout_interactions a
     WHERE
-        DATE(a.derived_tstamp) >= "2022-10-01"
+        DATE(a.derived_tstamp) >= '2022-10-01'
     ),
 
     session_steps AS (
@@ -15,9 +15,9 @@ WITH
         MIN(checkout_step_number) AS earliest_step,
         MAX(checkout_step_number) AS latest_step
     FROM
-        `$1`.`$2`.snowplow_ecommerce_checkout_interactions a
+        "$1"."$2".snowplow_ecommerce_checkout_interactions a
     WHERE
-        DATE(a.derived_tstamp) >= "2022-10-01"
+        DATE(a.derived_tstamp) >= '2022-10-01'
     GROUP BY
         1
     )
