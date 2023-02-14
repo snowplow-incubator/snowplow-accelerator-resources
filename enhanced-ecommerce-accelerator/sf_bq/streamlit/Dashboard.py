@@ -4,14 +4,14 @@ import pandas as pd
 import datetime
 import os
 
-_WAREHOUSE = 'snowflake'
+_WAREHOUSE = 'CHANGE_ME'
 
 if _WAREHOUSE.lower() == 'snowflake':
     from utils.connect_snowflake import download_data
 elif _WAREHOUSE.lower() == 'bigquery':
     from utils.connect_bigquery import download_data
 else:
-    raise ValueError(F'{_WAREHOUSE} is not a currently supported warehouse, please choose from [Snowflake, BigQuery]')
+    raise ValueError(f'{_WAREHOUSE} is not a currently supported warehouse, please choose from [Snowflake, BigQuery]')
 
 data_sources = [
     ('products/brand_revenues', 'brand_revenues'),

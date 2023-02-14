@@ -5,8 +5,7 @@ with latest_date AS (
     from $1.$2.SNOWPLOW_ECOMMERCE_PRODUCT_INTERACTIONS
 ), temp AS (
     select
-        ld.max_date - seq4() as dates,
-        uniform(1,590, random()) as random_number
+        ld.max_date - seq4() as dates
 
     FROM TABLE(GENERATOR(rowcount => 30))
     JOIN latest_date as ld ON 1=1
@@ -26,8 +25,7 @@ product_views as (
 
 SELECT
     temp.dates AS Date,
-    --coalesce(number_views, 0) AS product_views
-    random_number as product_views -- demo purpose only!
+    coalesce(number_views, 0) AS product_views
 FROM
     TEMP
     LEFT JOIN product_views b

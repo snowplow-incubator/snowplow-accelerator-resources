@@ -1,6 +1,6 @@
 -- Product views in out-of-stock products
 with temp as (
-    SELECT dates , CAST(FLOOR(590*RAND()) AS INT64) as random_number FROM (
+    SELECT dates FROM (
         SELECT
             MAX(date_trunc(CAST(derived_tstamp AS DATE), DAY)) max_date
         FROM
@@ -21,8 +21,7 @@ product_views as (
 
 SELECT
     temp.dates AS Date,
-    --coalesce(number_views, 0) AS product_views
-    random_number as product_views -- demo purpose only!
+    coalesce(number_views, 0) AS product_views
 FROM
     TEMP
     LEFT JOIN product_views b

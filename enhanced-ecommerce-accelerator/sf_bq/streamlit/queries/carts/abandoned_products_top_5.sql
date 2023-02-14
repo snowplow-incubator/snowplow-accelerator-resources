@@ -13,7 +13,7 @@ WITH session_products AS (
         product_id
     )
 SELECT
-    product_id,
+    cast(product_id as string) as product_id,
     SUM(total_added) AS total_added,
     SUM(total_removed) AS total_removed,
     SUM(total_added - total_removed) AS total_abandoned
