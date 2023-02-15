@@ -1,3 +1,4 @@
 transaction_payment_method,number_transactions
-credit card,10
-BNPL,3
+credit card,309
+BNPL,34
+paypal,97

@@ -75,7 +75,7 @@ def main():
     with col1:
         st.metric(
             label = 'Transactions',
-            value = sum(data['customer_order_count'].iloc[:,1])
+            value = format(sum(data['customer_order_count'].iloc[:,1]), ',')
         )
 
     with col2:
@@ -109,8 +109,7 @@ def main():
     views_and_transactions = data['views_and_transactions'].rename(columns = {'views' : 'Views', 'transactions': 'Transactions'})
     col1, col2 = st.columns([1, 2])
     with col1:
-        views_and_transactions["sizes"] = 2
-        fig = px.scatter(views_and_transactions, x = 'Views', y= 'Transactions', hover_data = ['Views', 'Transactions', 'product_id'], size='sizes')
+        fig = px.scatter(views_and_transactions, x = 'Views', y= 'Transactions', hover_data = ['Views', 'Transactions', 'product_id'])
 
         fig.update_layout(
             height=300,
@@ -206,6 +205,7 @@ def main():
     with col2:
         #TODO Last 5 abandoned products?
         fig = px.bar(data['abandoned_products_top_5'].rename(columns = {'total_abandoned': 'Total Abandoned'}), x = 'product_id', y = 'Total Abandoned')
+        fig.update_xaxes(type = 'category')
         fig.update_layout(
             height=300,
             width=700,

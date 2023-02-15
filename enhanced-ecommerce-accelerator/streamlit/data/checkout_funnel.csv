@@ -1,4 +1,7 @@
 step,checkout_step_number,session_entered_at_step,volume
-checkout step 1,1,False,10
-checkout step 2,2,False,10
-order complete,4,False,7
+checkout step 1,1,False,1074
+checkout step 2,2,False,948
+order complete,4,False,911
+checkout step 1,1,True,182
+checkout step 2,2,True,175
+order complete,4,True,71
