@@ -1,35 +1,59 @@
-from utils.connect import get_data, connect_to_snowflake, disconnect_from_snowflake
+from utils.connect import run_download_data
 import streamlit as st
 import plotly.graph_objects as go
 from utils.countries import data_by_country
+import os
+import pandas as pd
 
 
 def main():
-    st.set_page_config(layout="wide", page_title="Snowplow Mobile Insights")
 
-    st.title("Snowplow Mobile Insights")
+    _WAREHOUSE = 'snowflake'
+    _supported_warehouse = ['snowflake']
+
+    data_sources = [
+        ('sessions/num_sessions_by_day', 'num_sessions_by_day'),
+        ('sessions/num_sessions', 'num_sessions'),
+        ('sessions/avg_duration_by_day', 'avg_duration_by_day'),
+        ('sessions/avg_duration', 'avg_duration'),
+        ('sessions/sessions_by_geo', 'sessions_by_geo'),
+        ('sessions/sessions_by_device', 'sessions_by_device'),
+        ('users/number_of_users', 'number_of_users'),
+        ('screenviews/screenviews_by_day', 'screenviews_by_day'),
+        ('screenviews/screenviews_by_screen', 'screenviews_by_screen'),
+        ('sessions/bounce_rate_by_day', 'bounce_rate_by_day')
+    ]
+
+    st.set_page_config(layout="wide", page_title="Snowplow Hybrid Insights")
+
+    if _WAREHOUSE.lower() not in _supported_warehouse:
+        if _WAREHOUSE == 'CHANGE_ME':
+            raise ValueError(f'Please change _WAREHOUSE variable in the `Dashboard.py` file on line 11 to your warehouse choice, one of {_supported_warehouse}')
+        else:
+            raise ValueError(f'{_WAREHOUSE} is not a currently supported warehouse, please choose from {_supported_warehouse}')
 
 
+    if '_WAREHOUSE' not in st.session_state:
+        st.session_state['_WAREHOUSE'] = _WAREHOUSE.lower()
+    if 'data_sources' not in st.session_state:
+        st.session_state['data_sources'] = data_sources
+
+    data_sources = st.session_state['data_sources']
+    _WAREHOUSE = st.session_state['_WAREHOUSE']
+
+    st.title("Snowplow Hybrid Insights")
+
+    # Button to re-run and load the data
+    if st.button('Refresh Data'):
+        run_download_data(_WAREHOUSE, data_sources)
+
+
+
+    data = dict()
     data_load_state = st.text("Loading data...")
-    cs, cnx = connect_to_snowflake()
-    num_sessions_by_day = get_data(cs, "queries/sessions/num_sessions_by_day.sql")
-    num_sessions = get_data(cs, "queries/sessions/num_sessions.sql")
+    for _, name in data_sources:
+        data[name] = pd.read_csv(os.path.join('data', f'{name}.csv'))
 
-    session_duration_by_day = get_data( cs, "queries/sessions/avg_duration_by_day.sql")
-    session_duration = get_data( cs, "queries/sessions/avg_duration.sql")
-
-    sessions_by_country = get_data( cs, "queries/sessions/sessions_by_geo.sql")
-    sessions_by_device = get_data( cs, "queries/sessions/sessions_by_device.sql")
-
-    total_users = get_data( cs, "queries/users/number_of_users.sql")
-
-    screenviews_by_day = get_data( cs, "queries/screenviews/screenviews_by_day.sql")
-    screenviews_by_screen = get_data( cs, "queries/screenviews/screenviews_by_screen.sql")
-
-    bounce_rate_by_day = get_data( cs, "queries/sessions/bounce_rate_by_day.sql")
-
-    disconnect_from_snowflake(cs, cnx)
-    
     data_load_state.text("")
 
     st.subheader("Summary")
@@ -37,29 +61,30 @@ def main():
     col1, col2, col3 = st.columns([1, 3, 2])
 
     with col1:
+        st.dataframe(data['num_sessions'])
         st.metric(
-            value="{0:,.0f}".format(num_sessions["NUMBER_OF_SESSIONS"][0]),
+            value="{0:,.0f}".format(data['num_sessions']["number_of_sessions"][0]),
             label="Total Sessions",
         )
         st.metric(
-            value=str(session_duration["AVERAGE_SESSION_SESSION_DURATION_S"][0]) + "s",
+            value=str(data['avg_duration']["average_session_session_duration_s"][0]) + "s",
             label="Average Session Len",
         )
         st.metric(
-            value="{0:,.0f}".format(total_users["NUMBER_OF_USERS"][0]),
+            value="{0:,.0f}".format(data['number_of_users']["number_of_users"][0]),
             label="Total Users",
         )
 
     with col2:
-        sessions_iso3 = data_by_country(sessions_by_country)
+        sessions_iso3 = data_by_country(data['sessions_by_geo'])
 
         fig = go.Figure(
             data=go.Choropleth(
-                locations=sessions_iso3["ISO_3"],
-                z=sessions_iso3["NUMBER_OF_SESSIONS"],
+                locations=sessions_iso3["iso_3"],
+                z=sessions_iso3["number_of_sessions"],
                 colorscale="Blues",
                 showscale=False,
-                
+
             )
         )
 
@@ -86,8 +111,8 @@ def main():
         fig = go.Figure(
             data=[
                 go.Pie(
-                    labels=sessions_by_device["DEVICE_MODEL"],
-                    values=sessions_by_device["NUMBER_OF_SESSIONS"],
+                    labels=data['sessions_by_device']["device_model"],
+                    values=data['sessions_by_device']["number_of_sessions"],
                     hole=0.3,
                 )
             ]
@@ -111,8 +136,8 @@ def main():
         fig = go.Figure(
             [
                 go.Scatter(
-                    x=num_sessions_by_day["DATE"],
-                    y=num_sessions_by_day["NUMBER_OF_SESSIONS"],
+                    x=data['num_sessions_by_day']["date"],
+                    y=data['num_sessions_by_day']["number_of_sessions"],
                     fill="tozeroy",
                 )
             ]
@@ -125,13 +150,13 @@ def main():
         )
         fig.update_layout(title_text="Total Sessions")
         st.plotly_chart(fig, use_container_width=True)
-        
+
     with col2:
         fig = go.Figure(
             [
                 go.Bar(
-                    x=session_duration_by_day["DATE"],
-                    y=session_duration_by_day["AVG_SESSION_DURATION"],
+                    x=data['avg_duration_by_day']["date"],
+                    y=data['avg_duration_by_day']["avg_session_duration"],
                 ),
             ]
         )
@@ -145,16 +170,16 @@ def main():
         fig.update_layout(title_text="Average Session Duration")
 
         st.plotly_chart(fig, use_container_width=True)
-    
+
 
     with col3:
-        
+
 
         fig = go.Figure(
             [
                 go.Scatter(
-                    x=bounce_rate_by_day["DATE"],
-                    y=bounce_rate_by_day["BOUNCERATE"],
+                    x=data['bounce_rate_by_day']["date"],
+                    y=data['bounce_rate_by_day']["bouncerate"],
                     fill="tozeroy"
                 )
             ]
@@ -177,8 +202,8 @@ def main():
         fig = go.Figure(
             [
                 go.Bar(
-                    x=screenviews_by_day["DATE"],
-                    y=screenviews_by_day["NUMBER_OF_SCREENVIEWS"],
+                    x=data['screenviews_by_day']["date"],
+                    y=data['screenviews_by_day']["number_of_screenviews"],
                 ),
             ]
         )
@@ -200,7 +225,7 @@ def main():
             go.Table(
                 header=dict(values=["", ""], line_color="white", fill_color="white"),
                 cells=dict(
-                    values=[screenviews_by_screen["SCREEN_VIEW_NAME"], screenviews_by_screen["NUMBER_OF_SCREENVIEWS"]],
+                    values=[data['screenviews_by_screen']["screen_view_name"], data['screenviews_by_screen']["number_of_screenviews"]],
                     align="left",
                     line_color=["white"],
                     fill_color=["white"],

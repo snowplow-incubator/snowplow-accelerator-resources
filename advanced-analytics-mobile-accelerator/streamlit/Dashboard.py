@@ -24,8 +24,6 @@ def main():
     ]
 
     # Set headers and titles
-    st.set_page_config(layout="wide", page_title="Products")
-
     if _WAREHOUSE.lower() not in _supported_warehouse:
         if _WAREHOUSE == 'CHANGE_ME':
             raise ValueError(f'Please change _WAREHOUSE variable in the `Dashboard.py` file on line 10 to your warehouse choice, one of {_supported_warehouse}')
@@ -44,6 +42,10 @@ def main():
 
     st.title("Snowplow Mobile Insights")
 
+    # Button to re-run and load the data
+    if st.button('Refresh Data'):
+        run_download_data(_WAREHOUSE, data_sources)
+
     data = dict()
     data_load_state = st.text("Loading data...")
     for _, name in data_sources:
@@ -61,7 +63,7 @@ def main():
             label="Total Sessions",
         )
         st.metric(
-            value=str(avg_dudata['rdata']['ation']["AVERAGE_SESSION_SESSION_DURATION_S"][0]) + "s",
+            value=str(data['avg_duration']["AVERAGE_SESSION_SESSION_DURATION_S"][0]) + "s",
             label="Average Session Len",
         )
         st.metric(
