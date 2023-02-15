@@ -76,8 +76,6 @@ def get_data_from_warehouse(filename: str, warehouse: str) -> pd.DataFrame:
 
     return df
 
-
-
 def download_data(query_file, data_file, warehouse):
     df = get_data_from_warehouse(query_file, warehouse)
     df.to_csv(os.path.join('data', data_file), index=False)
