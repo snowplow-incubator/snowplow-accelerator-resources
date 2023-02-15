@@ -8,7 +8,7 @@ import pandas as pd
 
 def main():
     _WAREHOUSE = 'snowflake'
-    _supported_warehouse = ['snowflake', 'bigquery']
+    _supported_warehouse = ['snowflake']
 
     data_sources = [
         ('sessions/num_sessions_by_day', 'num_sessions_by_day'),
@@ -59,15 +59,15 @@ def main():
 
     with col1:
         st.metric(
-            value="{0:,.0f}".format(data['num_sessions']["NUMBER_OF_SESSIONS"][0]),
+            value="{0:,.0f}".format(data['num_sessions']["number_of_sessions"][0]),
             label="Total Sessions",
         )
         st.metric(
-            value=str(data['avg_duration']["AVERAGE_SESSION_SESSION_DURATION_S"][0]) + "s",
+            value=str(data['avg_duration']["average_session_session_duration_s"][0]) + "s",
             label="Average Session Len",
         )
         st.metric(
-            value="{0:,.0f}".format(data['number_of_users']["NUMBER_OF_USERS"][0]),
+            value="{0:,.0f}".format(data['number_of_users']["number_of_users"][0]),
             label="Total Users",
         )
 
@@ -76,8 +76,8 @@ def main():
 
         fig = go.Figure(
             data=go.Choropleth(
-                locations=sessions_iso3["ISO_3"],
-                z=sessions_iso3["NUMBER_OF_SESSIONS"],
+                locations=sessions_iso3["iso_3"],
+                z=sessions_iso3["number_of_sessions"],
                 colorscale="Blues",
                 showscale=False,
 
@@ -107,8 +107,8 @@ def main():
         fig = go.Figure(
             data=[
                 go.Pie(
-                    labels=data['sessions_by_device']["DEVICE_MODEL"],
-                    values=data['sessions_by_device']["NUMBER_OF_SESSIONS"],
+                    labels=data['sessions_by_device']["device_model"],
+                    values=data['sessions_by_device']["number_of_sessions"],
                     hole=0.3,
                 )
             ]
@@ -132,8 +132,8 @@ def main():
         fig = go.Figure(
             [
                 go.Scatter(
-                    x=data['num_sessions_by_day']["DATE"],
-                    y=data['num_sessions_by_day']["NUMBER_OF_SESSIONS"],
+                    x=data['num_sessions_by_day']["date"],
+                    y=data['num_sessions_by_day']["number_of_sessions"],
                     fill="tozeroy",
                 )
             ]
@@ -151,8 +151,8 @@ def main():
         fig = go.Figure(
             [
                 go.Bar(
-                    x=data['avg_duration_by_day']["DATE"],
-                    y=data['avg_duration_by_day']["AVG_SESSION_DURATION"],
+                    x=data['avg_duration_by_day']["date"],
+                    y=data['avg_duration_by_day']["avg_session_duration"],
                 ),
             ]
         )
@@ -174,8 +174,8 @@ def main():
         fig = go.Figure(
             [
                 go.Scatter(
-                    x=data['bounce_rate_by_day']["DATE"],
-                    y=data['bounce_rate_by_day']["BOUNCERATE"],
+                    x=data['bounce_rate_by_day']["date"],
+                    y=data['bounce_rate_by_day']["bouncerate"],
                     fill="tozeroy"
                 )
             ]
@@ -198,8 +198,8 @@ def main():
         fig = go.Figure(
             [
                 go.Bar(
-                    x=data['screenviews_by_day']["DATE"],
-                    y=data['screenviews_by_day']["NUMBER_OF_SCREENVIEWS"],
+                    x=data['screenviews_by_day']["date"],
+                    y=data['screenviews_by_day']["number_of_screenviews"],
                 ),
             ]
         )
@@ -221,7 +221,7 @@ def main():
             go.Table(
                 header=dict(values=["", ""], line_color="white", fill_color="white"),
                 cells=dict(
-                    values=[data['screenviews_by_screen']["SCREEN_VIEW_NAME"], data['screenviews_by_screen']["NUMBER_OF_SCREENVIEWS"]],
+                    values=[data['screenviews_by_screen']["screen_view_name"], data['screenviews_by_screen']["number_of_screenviews"]],
                     align="left",
                     line_color=["white"],
                     fill_color=["white"],
