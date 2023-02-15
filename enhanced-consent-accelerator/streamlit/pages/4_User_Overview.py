@@ -19,8 +19,8 @@ if st.button('Refresh Data'):
 # getting data from Snowflake
 data_load_state = st.text("Loading data...")
 
-df_users = pd.read_csv(os.path.join('data', 'users.sql'))
-df_users['CMP_EVENTS'] = df_users['CMP_EVENTS'].astype(float).astype('Int64')
+df_users = pd.read_csv(os.path.join('data', 'users.csv'))
+df_users['cmp_events'] = df_users['cmp_events'].astype(float).astype('Int64')
 data_load_state.text("")
 
 st.header("Consent Overview by Users")
@@ -72,7 +72,7 @@ def filter_dataframe(df: pd.DataFrame) -> pd.DataFrame:
             left, right = st.columns((1, 20))
             left.write("↳")
 
-            if column == 'LAST_CONSENT_SCOPES':
+            if column == 'last_consent_scopes':
                 user_text_input = right.text_input(
                     f"Substring or regex in {column}",
                 )

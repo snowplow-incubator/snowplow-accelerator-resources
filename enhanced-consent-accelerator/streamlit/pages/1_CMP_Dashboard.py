@@ -26,6 +26,10 @@ st.subheader("View additional metrics related to CMP visible time")
 c1, c2, c3 = st.columns((8, 1, 8))
 
 with c1:
+    data['cmp_stats'] = data['cmp_stats'].rename(columns = {'cmp load time' : 'CMP load time',
+                                                            'first consent event type': 'First consent event type',
+                                                            'cmp interaction time': 'CMP interaction time'
+                                                            })
     fig = px.scatter(data['cmp_stats'], x='CMP load time', y='First consent event type', width=700, height=400, title="<b> CMP load time vs consent choice<b>")
     fig.update_layout(
         margin=dict(l=20, r=20, t=80, b=40),
@@ -41,8 +45,8 @@ with c3:
 
 custom_order =['within 2 sec', 'between 2 and 5 seconds', 'between 5 and 10 seconds', 'between 10 and 30 seconds', 'after 30+ seconds']
 colours = ['green', 'lightgreen', 'orange', 'crimson']
-fig = px.pie(data['cmp_load_times'], values=data['cmp_load_times']["VALUE"], names=data['cmp_load_times']["BASE"],
-color = data['cmp_load_times']["BASE"], color_discrete_map={
+fig = px.pie(data['cmp_load_times'], values=data['cmp_load_times']["value"], names=data['cmp_load_times']["base"],
+color = data['cmp_load_times']["base"], color_discrete_map={
                                                         'within 2 sec': 'green',
                                                         'between 2 and 5 seconds': 'lightgreen',
                                                         'between 5 and 10 seconds': 'gold',

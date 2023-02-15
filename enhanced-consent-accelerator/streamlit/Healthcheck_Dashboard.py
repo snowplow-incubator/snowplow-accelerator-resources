@@ -63,37 +63,37 @@ def main():
 
     with c1:
         st.metric(
-            value="{0:,.0f}".format(data['consent_totals']["TOTAL_VISITORS"][0]),
+            value="{0:,.0f}".format(data['consent_totals']["total_visitors"][0]),
             label="Total Visitors",
         )
     with c2:
         st.metric(
-            value="{0:,.0f}".format(data['consent_totals']["ALLOW"][0]),
+            value="{0:,.0f}".format(data['consent_totals']["allow"][0]),
             label="Consent Granted",
         )
     with c3:
         st.metric(
-            value="{0:,.0f}".format(data['consent_totals']["WITHDRAWN"][0]),
+            value="{0:,.0f}".format(data['consent_totals']["withdrawn"][0]),
             label="Consent Withdrawn",
         )
     with c4:
         st.metric(
-            value="{0:,.0f}".format(data['consent_totals']["PENDING"][0]),
+            value="{0:,.0f}".format(data['consent_totals']["pending"][0]),
             label="Consent Pending",
         )
     with c5:
         st.metric(
-            value=str(data['consent_totals']["EXPIRED"][0]),
+            value=str(data['consent_totals']["expired"][0]),
             label="Consent Expired",
         )
     with c6:
         st.metric(
-            value="{0:,.0f}".format(data['consent_totals']["DENIED"][0]),
+            value="{0:,.0f}".format(data['consent_totals']["denied"][0]),
             label="Consent Denied",
         )
     with c7:
         st.metric(
-            value="{0:,.0f}".format(data['consent_totals']["EXPIRES_IN_SIX_MONTHS"][0]),
+            value="{0:,.0f}".format(data['consent_totals']["expires_in_six_months"][0]),
             label="Consent Expiring in <6 Months",
         )
 
@@ -105,8 +105,8 @@ def main():
 
     with c1:
         custom_order =['Consent Granted', 'Partially Granted (Customised)', 'Denied', 'Expired', 'Withdrawn', 'Consent Pending']
-        fig = px.pie(data['consent_types'], values=data['consent_types']["VALUE"], names=data['consent_types']["BASE"],
-        color = data['consent_types']["BASE"],
+        fig = px.pie(data['consent_types'], values=data['consent_types']["value"], names=data['consent_types']["base"],
+        color = data['consent_types']["base"],
         color_discrete_map={
             'Consent Granted': 'green',
             'Partially Granted (Customised)': 'lightgreen',
@@ -122,7 +122,7 @@ def main():
 
     with c2:
         colours = []
-        fig3 = px.bar(data['consent_scopes'], x=data['consent_scopes']["SCOPE"], y=data['consent_scopes']["TOTAL_CONSENT"], color = data['consent_scopes']["SCOPE"],
+        fig3 = px.bar(data['consent_scopes'], x=data['consent_scopes']["scope"], y=data['consent_scopes']["total_consent"], color = data['consent_scopes']["scope"],
          color_discrete_map={
         'marketing': 'DarkBlue',
         'statistics': 'RoyalBlue',

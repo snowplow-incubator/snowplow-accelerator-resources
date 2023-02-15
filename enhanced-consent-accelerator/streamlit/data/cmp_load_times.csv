@@ -1,0 +1,6 @@
+base,value
+within 2 sec,22
+between 2 and 5 seconds,0
+between 5 and 10 seconds,5
+between 10 and 30 seconds,6
+after 30+ seconds,0
