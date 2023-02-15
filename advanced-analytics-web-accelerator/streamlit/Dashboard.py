@@ -7,8 +7,10 @@ import pandas as pd
 
 
 def main():
+
+    # Set headers and titles
     _WAREHOUSE = 'snowflake'
-    _supported_warehouse = ['snowflake', 'bigquery']
+    _supported_warehouse = ['snowflake']
 
     data_sources = [
         ('sessions/num_sessions_by_day', 'num_sessions_by_day'),
@@ -20,12 +22,9 @@ def main():
         ('users/number_of_users', 'number_of_users'),
         ('pageviews/pageviews_by_day', 'pageviews_by_day'),
         ('pageviews/pageviews_by_page', 'pageviews_by_page'),
-        ('pageviews/referer', 'referer'),
+        ('pageviews/pageviews_by_referer', 'pageviews_by_referer'),
         ('sessions/bounce_rate_by_day', 'bounce_rate_by_day')
     ]
-
-    # Set headers and titles
-    st.set_page_config(layout="wide", page_title="Products")
 
     if _WAREHOUSE.lower() not in _supported_warehouse:
         if _WAREHOUSE == 'CHANGE_ME':
@@ -63,15 +62,15 @@ def main():
 
     with col1:
         st.metric(
-            value="{0:,.0f}".format(data['num_sessions']["NUMBER_OF_SESSIONS"][0]),
+            value="{0:,.0f}".format(data['num_sessions']["number_of_sessions"][0]),
             label="Total Sessions",
         )
         st.metric(
-            value=str(data['avg_duration']["AVERAGE_SESSION_ENGAGED_TIME_IN_S"][0]) + "s",
+            value=str(data['avg_duration']["average_session_engaged_time_in_s"][0]) + "s",
             label="Average Session Len",
         )
         st.metric(
-            value="{0:,.0f}".format(data['number_of_users']["NUMBER_OF_USERS"][0]),
+            value="{0:,.0f}".format(data['number_of_users']["number_of_users"][0]),
             label="Total Users",
         )
 
@@ -80,8 +79,8 @@ def main():
 
         fig = go.Figure(
             data=go.Choropleth(
-                locations=sessions_iso3["ISO_3"],
-                z=sessions_iso3["NUMBER_OF_SESSIONS"],
+                locations=sessions_iso3["iso_3"],
+                z=sessions_iso3["number_of_sessions"],
                 colorscale="Blues",
                 showscale=False,
             )
@@ -110,8 +109,8 @@ def main():
         fig = go.Figure(
             data=[
                 go.Pie(
-                    labels=data['sessions_by_device']["DEVICE_FAMILY"],
-                    values=data['sessions_by_device']["NUMBER_OF_SESSIONS"],
+                    labels=data['sessions_by_device']["device_family"],
+                    values=data['sessions_by_device']["number_of_sessions"],
                     hole=0.3,
                 )
             ]
@@ -135,8 +134,8 @@ def main():
         fig = go.Figure(
             [
                 go.Scatter(
-                    x=data['num_sessions_by_day']["DATE"],
-                    y=data['num_sessions_by_day']["NUMBER_OF_SESSIONS"],
+                    x=data['num_sessions_by_day']["date"],
+                    y=data['num_sessions_by_day']["number_of_sessions"],
                     fill="tozeroy",
                 )
             ]
@@ -154,8 +153,8 @@ def main():
         fig = go.Figure(
             [
                 go.Bar(
-                    x=data['avg_duration_by_day']["DATE"],
-                    y=data['avg_duration_by_day']["AVG_ENGAGED_TIME"],
+                    x=data['avg_duration_by_day']["date"],
+                    y=data['avg_duration_by_day']["avg_engaged_time"],
                 ),
             ]
         )
@@ -175,8 +174,8 @@ def main():
         fig = go.Figure(
             [
                 go.Scatter(
-                    x=data['bounce_rate_by_day']["DATE"],
-                    y=data['bounce_rate_by_day']["BOUNCERATE"],
+                    x=data['bounce_rate_by_day']["date"],
+                    y=data['bounce_rate_by_day']["bouncerate"],
                     fill="tozeroy",
                 )
             ]
@@ -199,8 +198,8 @@ def main():
         fig = go.Figure(
             [
                 go.Bar(
-                    x=data['pageviews_by_day']["DATE"],
-                    y=data['pageviews_by_day']["NUMBER_OF_PAGEVIEWS"],
+                    x=data['pageviews_by_day']["date"],
+                    y=data['pageviews_by_day']["number_of_pageviews"],
                 ),
             ]
         )
@@ -225,8 +224,8 @@ def main():
                     ),
                     cells=dict(
                         values=[
-                            data['pageviews_by_page']["PAGE_TITLE"],
-                            data['pageviews_by_page']["NUMBER_OF_PAGEVIEWS"],
+                            data['pageviews_by_page']["page_title"],
+                            data['pageviews_by_page']["number_of_pageviews"],
                         ],
                         align="left",
                         line_color=["white"],
@@ -254,8 +253,8 @@ def main():
                     ),
                     cells=dict(
                         values=[
-                            data['pageviews_by_referer']["REFR_URLHOST"],
-                            data['pageviews_by_referer']["NUMBER_OF_PAGEVIEWS"],
+                            data['pageviews_by_referer']["refr_urlhost"],
+                            data['pageviews_by_referer']["number_of_pageviews"],
                         ],
                         align="left",
                         line_color=["white"],

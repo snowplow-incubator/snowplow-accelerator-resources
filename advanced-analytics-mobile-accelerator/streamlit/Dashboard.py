@@ -7,6 +7,8 @@ import pandas as pd
 
 
 def main():
+    st.set_page_config(layout="wide", page_title="Snowplow Mobile Insights")
+
     _WAREHOUSE = 'snowflake'
     _supported_warehouse = ['snowflake']
 
@@ -38,7 +40,7 @@ def main():
 
     data_sources = st.session_state['data_sources']
     _WAREHOUSE = st.session_state['_WAREHOUSE']
-    st.set_page_config(layout="wide", page_title="Snowplow Mobile Insights")
+
 
     st.title("Snowplow Mobile Insights")
 
