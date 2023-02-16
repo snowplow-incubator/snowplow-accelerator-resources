@@ -101,7 +101,7 @@ def main():
     st.markdown("""---""")
 
     # Chart row
-    c1, c2, c3 = st.columns((2, 1, 2))
+    c1, c2 = st.columns((2, 2))
 
     with c1:
         custom_order =['Consent Granted', 'Partially Granted (Customised)', 'Denied', 'Expired', 'Withdrawn', 'Consent Pending']
