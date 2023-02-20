@@ -15,7 +15,7 @@ SELECT
   lag(l.consent_version, 1) over(partition by l.domain_userid order by l.derived_tstamp) previous_consent_version,
   lag(l.consent_url, 1) over(partition by l.domain_userid order by l.derived_tstamp) previous_consent_url
 
-FROM snowplow_web_consent_LOG l
+FROM $1.$2.snowplow_web_consent_log l
 
 left join $1.$2.snowplow_web_consent_users u
 on u.domain_userid = l.domain_userid

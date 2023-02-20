@@ -26,9 +26,9 @@ st.subheader("View additional metrics related to CMP visible time")
 c1, c2, c3 = st.columns((8, 1, 8))
 
 with c1:
-    data['cmp_stats'] = data['cmp_stats'].rename(columns = {'cmp load time' : 'CMP load time',
-                                                            'first consent event type': 'First consent event type',
-                                                            'cmp interaction time': 'CMP interaction time'
+    data['cmp_stats'] = data['cmp_stats'].rename(columns = {'cmp_load_time' : 'CMP load time',
+                                                            'first_consent_event_type': 'First consent event type',
+                                                            'cmp_interaction_time': 'CMP interaction time'
                                                             })
     fig = px.scatter(data['cmp_stats'], x='CMP load time', y='First consent event type', width=700, height=400, title="<b> CMP load time vs consent choice<b>")
     fig.update_layout(

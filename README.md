@@ -6,7 +6,7 @@ This repo holds downloadable resources for use with [Snowplow Accelerators](http
 ```
 Web Analytics Accelerator
 |    Streamlit
-|    Looker
+|    databricks-notebook
 
 E-Commerce Accelerator
 |   Looker
