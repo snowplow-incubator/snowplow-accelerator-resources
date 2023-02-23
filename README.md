@@ -5,16 +5,11 @@ This repo holds downloadable resources for use with [Snowplow Accelerators](http
 ### Folder Structure Example
 ```
 Web Analytics Accelerator
-|----   Snowflake
-|       |    Streamlit
-|       |    Looker
-|----   BigQuery
-|       |    Streamlit
+|    Streamlit
+|    databricks-notebook
 
 E-Commerce Accelerator
-|----   Snowflake
-|       |   Looker
-|----   BigQuery
-|       |   Streamlit
+|   Looker
+|   Streamlit
 
 ```

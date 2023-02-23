@@ -1,0 +1,4 @@
+transaction_payment_method,number_transactions
+credit card,309
+BNPL,34
+paypal,97
