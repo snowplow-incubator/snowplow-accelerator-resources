@@ -11,6 +11,7 @@ pandas = "*"
 snowflake-connector-python = "==3.0.0"
 pandas-gbq = "==0.19.1"
 google = "*"
+databricks-sql-connector = "2.3.0"
 
 [dev-packages]
 

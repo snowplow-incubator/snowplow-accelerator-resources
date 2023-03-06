@@ -5,6 +5,7 @@ import snowflake.connector
 import pandas as pd
 import streamlit as st
 import os as os
+from databricks import sql
 
 # Perform query.
 def get_data_from_warehouse(filename: str, warehouse: str) -> pd.DataFrame:
@@ -72,6 +73,28 @@ def get_data_from_warehouse(filename: str, warehouse: str) -> pd.DataFrame:
         query = query.replace('$1', f'`{project}`')
         query = query.replace('$2', f'`{dataset}`')
         df = pdgbq.read_gbq(query, credentials = service_account.Credentials.from_service_account_info(st.secrets["gcp_service_account"]))
+        df.columns= df.columns.str.lower()
+    elif warehouse == 'databricks':
+        db_creds = st.secrets["databricks"]
+
+        databricks_server_hostname = db_creds["databricks_server_hostname"]
+        databricks_http_path = db_creds["databricks_http_path"]
+        databricks_token = db_creds["databricks_token"]
+        schema = db_creds["schema"]
+        catalog = db_creds["catalog"]
+
+        query = query.replace('$1', f'`{catalog}`')
+        query = query.replace('$2', f'`{schema}`')
+
+
+        with sql.connect(server_hostname = databricks_server_hostname,
+                        http_path       = databricks_http_path,
+                        access_token    = databricks_token) as connection:
+
+            with connection.cursor() as cursor:
+                cursor.execute(query)
+                result = cursor.fetchall()
+                df =  pd.DataFrame(result, columns=[x[0] for x in cursor.description])
         df.columns= df.columns.str.lower()
 
     return df
