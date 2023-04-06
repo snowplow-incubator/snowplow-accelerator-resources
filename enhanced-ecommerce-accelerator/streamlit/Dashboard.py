@@ -8,7 +8,7 @@ from utils.connect import run_download_data
 def main():
 
     _WAREHOUSE = 'CHANGE_ME'
-    _supported_warehouse = ['snowflake', 'bigquery']
+    _supported_warehouse = ['snowflake', 'bigquery', 'databricks']
 
     data_sources = [
         ('products/brand_revenues', 'brand_revenues'),
