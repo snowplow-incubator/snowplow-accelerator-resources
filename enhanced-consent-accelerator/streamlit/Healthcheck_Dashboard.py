@@ -14,7 +14,7 @@ from utils.connect import run_download_data
 def main():
 
     _WAREHOUSE = 'snowflake'
-    _supported_warehouse = ['snowflake', 'bigquery']
+    _supported_warehouse = ['snowflake', 'bigquery', 'databricks']
 
     data_sources = [
         ('consent_scopes', 'consent_scopes'),
