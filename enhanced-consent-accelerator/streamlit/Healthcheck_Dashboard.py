@@ -13,7 +13,7 @@ from utils.connect import run_download_data
 
 def main():
 
-    _WAREHOUSE = 'snowflake'
+    _WAREHOUSE = 'CHANGE_ME'
     _supported_warehouse = ['snowflake', 'bigquery', 'databricks']
 
     data_sources = [
@@ -28,7 +28,7 @@ def main():
     ]
 
     st.set_page_config(layout="wide", page_title="CONSENT DASHBOARD", page_icon=":bar_chart:", initial_sidebar_state="expanded")
-    st.title("Consent Healthcheck Dashoard")
+    st.title("Consent Healthcheck Dashboard")
 
     if _WAREHOUSE.lower() not in _supported_warehouse:
         if _WAREHOUSE == 'CHANGE_ME':
