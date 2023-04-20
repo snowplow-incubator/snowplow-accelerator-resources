@@ -9,8 +9,8 @@ import pandas as pd
 def main():
 
     # Set headers and titles
-    _WAREHOUSE = 'snowflake'
-    _supported_warehouse = ['snowflake']
+    _WAREHOUSE = 'CHANGE_ME'
+    _supported_warehouse = ['snowflake', 'databricks', 'bigquery']
 
     data_sources = [
         ('sessions/num_sessions_by_day', 'num_sessions_by_day'),
