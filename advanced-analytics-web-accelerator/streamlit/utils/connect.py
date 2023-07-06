@@ -49,7 +49,8 @@ def get_data_from_warehouse(filename: str, warehouse: str) -> pd.DataFrame:
             account=account,
             database=database,
             role=role,
-            warehouse=warehouse
+            warehouse=warehouse,
+            application="Snowplow_BDP"
         )
 
         query = query.replace('$1',f'"{database}"')
