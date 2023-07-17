@@ -9,8 +9,8 @@ import pandas as pd
 def main():
     st.set_page_config(layout="wide", page_title="Snowplow Mobile Insights")
 
-    _WAREHOUSE = 'snowflake'
-    _supported_warehouse = ['snowflake']
+    _WAREHOUSE = 'databricks'
+    _supported_warehouse = ['snowflake', 'databricks', 'bigquery']
 
     data_sources = [
         ('sessions/num_sessions_by_day', 'num_sessions_by_day'),

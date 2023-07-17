@@ -9,7 +9,7 @@ import pandas as pd
 def main():
 
     _WAREHOUSE = 'snowflake'
-    _supported_warehouse = ['snowflake']
+    _supported_warehouse = ['snowflake', 'databricks', 'bigquery']
 
     data_sources = [
         ('sessions/num_sessions_by_day', 'num_sessions_by_day'),
