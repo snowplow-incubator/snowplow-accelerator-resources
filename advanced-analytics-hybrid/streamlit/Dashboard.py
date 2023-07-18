@@ -8,7 +8,7 @@ import pandas as pd
 
 def main():
 
-    _WAREHOUSE = 'snowflake'
+    _WAREHOUSE = 'CHANGE_ME'
     _supported_warehouse = ['snowflake', 'databricks', 'bigquery']
 
     data_sources = [

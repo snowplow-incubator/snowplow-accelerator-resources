@@ -9,7 +9,7 @@ import pandas as pd
 def main():
     st.set_page_config(layout="wide", page_title="Snowplow Mobile Insights")
 
-    _WAREHOUSE = 'databricks'
+    _WAREHOUSE = 'CHANGE_ME'
     _supported_warehouse = ['snowflake', 'databricks', 'bigquery']
 
     data_sources = [
